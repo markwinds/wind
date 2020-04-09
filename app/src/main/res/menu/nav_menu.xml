@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/group1">
+        <item
+            android:icon="@drawable/ic_unarchive_white_24dp"
+            android:title="@string/sended" />
+        <item
+            android:icon="@drawable/ic_archive_white_24dp"
+            android:title="@string/received" />
+        <item
+            android:icon="@drawable/ic_send_white_24dp"
+            android:title="@string/transit" />
+    </group>
+    <group android:id="@+id/group2">
+        <item
+            android:id="@+id/navAddress"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/address_manager" />
+        <item
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/log_out" />
+    </group>
+</menu>
