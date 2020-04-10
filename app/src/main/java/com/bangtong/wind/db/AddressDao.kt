@@ -12,7 +12,9 @@ interface AddressDao {
     @Query("SELECT * FROM address WHERE user=:user")
     fun getAllAddress(user:String): LiveData<List<UserAddress>>
     @Delete
-    suspend fun deleteById(vararg userAddresses:UserAddress) // 根据传入结构体的主键自动删除
+    suspend fun delete(vararg userAddresses:UserAddress) // 根据传入结构体的主键自动删除
     @Update
     suspend fun updateAddress(vararg userAddresses:UserAddress)
+    @Query("DELETE FROM address")
+    suspend fun deleteAll()
 }

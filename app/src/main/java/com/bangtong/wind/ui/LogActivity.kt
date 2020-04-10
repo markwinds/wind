@@ -11,10 +11,6 @@ import com.bangtong.wind.util.MyApplication
 import com.bangtong.wind.util.TinyDB
 import com.bangtong.wind.view.LogViewModel
 import kotlinx.android.synthetic.main.activity_log.*
-import kotlinx.android.synthetic.main.fragment_log_in.buttonLogIn
-import kotlinx.android.synthetic.main.fragment_log_in.buttonSignUp
-import kotlinx.android.synthetic.main.fragment_log_in.userId
-import kotlinx.android.synthetic.main.fragment_log_in.userPwd
 
 class LogActivity : MyActivity() {
 
@@ -24,7 +20,6 @@ class LogActivity : MyActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log)
         setSupportActionBar(toolbar)
-        val tinyDB = TinyDB(MyApplication.context)
         if(TinyDBManager.skip()){
             val intent = Intent(this,HomeActivity::class.java)
             startActivity(intent)

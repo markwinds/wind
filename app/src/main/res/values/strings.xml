@@ -28,5 +28,6 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="add">Add</string>
+    <string name="network_error">Check you network and try again</string>
 
 </resources>

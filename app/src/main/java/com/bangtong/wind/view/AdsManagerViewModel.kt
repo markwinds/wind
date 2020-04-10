@@ -18,7 +18,19 @@ class AdsManagerViewModel:ViewModel() {
         repository.insertAddress(address)
     }
 
-    fun test(address:UserAddress) = viewModelScope.launch(Dispatchers.IO){
-        NetworkControl().operateAddress(address,"ddd")
+    fun insertCloud(address:UserAddress) = viewModelScope.launch(Dispatchers.IO){
+        repository.insertAddressCloud(address)
+    }
+
+    fun deleteCloud(address:UserAddress) = viewModelScope.launch(Dispatchers.IO){
+        repository.deleteAddressCloud(address)
+    }
+
+    fun updateCloud(address:UserAddress) = viewModelScope.launch(Dispatchers.IO){
+        repository.updateAddressCloud(address)
+    }
+
+    fun syncCloud(onSuccess:()->Unit)= viewModelScope.launch(Dispatchers.IO){
+        repository.syncAddressCloud(onSuccess)
     }
 }

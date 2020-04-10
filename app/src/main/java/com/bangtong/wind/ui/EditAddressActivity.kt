@@ -19,13 +19,14 @@ import kotlinx.android.synthetic.main.activity_edit_address.*
 
 class EditAddressActivity : MyActivity() {
 
-    //private val viewModel by viewModels<EditAddressViewModel>()
+    private val viewModel by viewModels<EditAddressViewModel>()
     private val TAG = "EditAddressActivity_ZBT"
+    private var addressId:Long = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_address)
-        val viewModel by viewModels<EditAddressViewModel>()
+        //val viewModel by viewModels<EditAddressViewModel>()
         setSupportActionBar(toolbar2)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
@@ -43,6 +44,17 @@ class EditAddressActivity : MyActivity() {
         }
         submit.setOnClickListener{
             goAdsManagerActivity(true)
+        }
+        if (intent != null){
+            val tempAddress = intent.getParcelableExtra<UserAddress>("address")
+            if(tempAddress != null){
+                name.setText(tempAddress.name)
+                phone.setText(tempAddress.phone)
+                val temp = tempAddress.province+" "+tempAddress.city+" "+ tempAddress.area
+                area.setText(temp)
+                address.setText(tempAddress.location)
+                addressId = tempAddress.id
+            }
         }
     }
 
@@ -62,7 +74,7 @@ class EditAddressActivity : MyActivity() {
             if(!TextUtils.isEmpty(name.text) && !TextUtils.isEmpty(phone.text)&&
                 !TextUtils.isEmpty(area.text) && !TextUtils.isEmpty(address.text)) {
                 val list = area.text.toString().split(" ")
-                var tempAddress = UserAddress(1, TinyDBManager.id,name.text.toString(),phone.text.toString(),list[0],list[1],
+                val tempAddress = UserAddress(addressId, TinyDBManager.id,name.text.toString(),phone.text.toString(),list[0],list[1],
                     list[2],address.text.toString())
                 LogUtil.d(TAG,"Commit address ${TinyDBManager.id} ${name.text} ${phone.text} ${list[0]} ${list[1]} ${list[2]} ${address.text}")
                 val replyIntent = Intent().putExtra("address",tempAddress)

@@ -6,12 +6,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import com.bangtong.wind.R
+import com.bangtong.wind.data.TinyDBManager
 import com.bangtong.wind.util.MyActivity
 import com.bangtong.wind.util.ToastUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_log.*
 import kotlinx.android.synthetic.main.activity_log.toolbar
+import kotlinx.android.synthetic.main.nav_header.*
 
 class HomeActivity : MyActivity() {
 
@@ -46,7 +48,10 @@ class HomeActivity : MyActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            android.R.id.home -> drawerLayout.openDrawer(GravityCompat.START)
+            android.R.id.home -> {
+                drawerLayout.openDrawer(GravityCompat.START)
+                userName.text = TinyDBManager.id
+            }
         }
         return true
     }

@@ -22,6 +22,11 @@ interface WindService {
         @Query("password") password:String
     ):Call<String>
 
+    @GET("address")
+    fun syncAddress(
+        @Query("user") user:String
+    ):Call<List<UserAddress>>
+
     @POST("user")
     fun signUp(
         @Body user:User
@@ -31,6 +36,16 @@ interface WindService {
     fun insertAddress(
         @Body address:UserAddress
     ):Call<Long>
+
+    @POST("address/delete")
+    fun deleteAddress(
+        @Body address:UserAddress
+    ):Call<Boolean>
+
+    @POST("address/update")
+    fun updateAddress(
+        @Body address:UserAddress
+    ):Call<Boolean>
 
     companion object {
         private const val BASE_URL = "http://10.0.2.2:8080/cloud/"

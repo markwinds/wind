@@ -25,6 +25,9 @@ class EditAddressViewModel:ViewModel() {
     private val cities: MutableList<MutableList<String>> = ArrayList()
     private val areas: MutableList<MutableList<MutableList<String>>> = ArrayList()
     val area = MutableLiveData<MutableList<String>>()
+//    val name:MutableLiveData<String> = MutableLiveData("")
+//    val phone:MutableLiveData<String> = MutableLiveData("")
+//    val location:MutableLiveData<String> = MutableLiveData("")
 
     init {
         loadFromJson()

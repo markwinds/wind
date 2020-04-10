@@ -23,10 +23,11 @@ import java.util.*
 
 class AdsManagerActivity : MyActivity() {
 
-    private val viewModel by viewModels<AdsManagerViewModel>()
+    val viewModel by viewModels<AdsManagerViewModel>()
     private val adapterGone = AdsManagerAdapter(false)
     private val adapterShow = AdsManagerAdapter(true)
-    private val editAddressActivityRequestCode = 1
+    private val editAddressActivityRequestAdd = 1
+    private val editAddressActivityRequestEdit = 2
     private val TAG = "AdsManagerActivity_ZBT"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +43,17 @@ class AdsManagerActivity : MyActivity() {
             adapterGone.submitList(it)
             adapterShow.submitList(it)
         })
+        swipeRefresh.setOnRefreshListener {
+            viewModel.syncCloud {
+                swipeRefresh.isRefreshing = false
+            }
+        }
+    }
 
-        viewModel.test(UserAddress(11,TinyDBManager.id,"周邦统","13588781370","pr","c","d","d"))
-        viewModel.insert(UserAddress(21,TinyDBManager.id,"周邦统","13588781370","pr","c","d","d"))
-        viewModel.insert(UserAddress(31,TinyDBManager.id,"31","13588781370","pr","c","d","d"))
-        viewModel.insert(UserAddress(41,TinyDBManager.id,"41","13588781370","pr","c","d","d"))
+    fun goEditAddressActivity(address: UserAddress){
+        val intent = Intent(this@AdsManagerActivity, EditAddressActivity::class.java)
+        intent.putExtra("address",address)
+        startActivityForResult(intent, editAddressActivityRequestEdit)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -57,7 +64,7 @@ class AdsManagerActivity : MyActivity() {
             }
             R.id.add -> {
                 val intent = Intent(this@AdsManagerActivity, EditAddressActivity::class.java)
-                startActivityForResult(intent, editAddressActivityRequestCode)
+                startActivityForResult(intent, editAddressActivityRequestAdd)
             }
         }
         return true
@@ -65,11 +72,17 @@ class AdsManagerActivity : MyActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == editAddressActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            LogUtil.d(TAG,"In activity result")
+        if (requestCode == editAddressActivityRequestAdd && resultCode == Activity.RESULT_OK) {
+            LogUtil.d(TAG,"In activity result add")
             data?.getParcelableExtra<UserAddress>("address")?.let {
                 it.id = Random().nextLong()
-                viewModel.insert(it)
+                viewModel.insertCloud(it)
+            }
+        }
+        if (requestCode == editAddressActivityRequestEdit && resultCode == Activity.RESULT_OK) {
+            LogUtil.d(TAG,"In activity result edit")
+            data?.getParcelableExtra<UserAddress>("address")?.let {
+                viewModel.updateCloud(it)
             }
         }
     }
