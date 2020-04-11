@@ -23,14 +23,15 @@ class AdsManagerViewModel:ViewModel() {
     }
 
     fun deleteCloud(address:UserAddress) = viewModelScope.launch(Dispatchers.IO){
-        repository.deleteAddressCloud(address)
+        address.live = false
+        repository.updateAddressCloud(address)
     }
 
     fun updateCloud(address:UserAddress) = viewModelScope.launch(Dispatchers.IO){
         repository.updateAddressCloud(address)
     }
 
-    fun syncCloud(onSuccess:()->Unit)= viewModelScope.launch(Dispatchers.IO){
-        repository.syncAddressCloud(onSuccess)
+    fun syncCloud(onComplete:()->Unit)= viewModelScope.launch(Dispatchers.IO){
+        repository.syncAddressCloud(onComplete)
     }
 }

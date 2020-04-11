@@ -112,4 +112,5 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    implementation 'com.afollestad.material-dialogs:core:3.1.1'
 }

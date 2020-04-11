@@ -29,5 +29,10 @@
     <string name="delete">Delete</string>
     <string name="add">Add</string>
     <string name="network_error">Check you network and try again</string>
+    <string name="sender">Sender</string>
+    <string name="receiver">Receiver</string>
+    <string name="remark">Remark</string>
+    <string name="confirm_delete">Are you sure delete?</string>
+    <string name="confirm">Confirm</string>
 
 </resources>

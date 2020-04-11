@@ -1,5 +1,6 @@
 package com.bangtong.wind.api
 
+import androidx.lifecycle.MutableLiveData
 import com.bangtong.wind.R
 import com.bangtong.wind.data.TinyDBManager
 import com.bangtong.wind.model.User
@@ -14,6 +15,10 @@ import retrofit2.Response
 
 
 class NetworkControl {
+
+    companion object{
+        val callBackComplete: MutableLiveData<String> = MutableLiveData()
+    }
 
     private val TAG = "NetworkControl_ZBT"
     private val service = WindService.getService()
@@ -78,17 +83,20 @@ class NetworkControl {
         address:UserAddress,
         onSuccess:(id:Long)->Unit
     ){
+        callBackComplete.postValue("Show progress bar")
         service.insertAddress(address).enqueue(
             object :Callback<Long>{
                 override fun onFailure(call: Call<Long>, t: Throwable) {
                     LogUtil.d(TAG,"Insert address failed")
                     showNetworkError()
+                    callBackComplete.postValue("Hide progress bar")
                 }
                 override fun onResponse(call: Call<Long>, response: Response<Long>) {
                     if(response.isSuccessful){
                         LogUtil.d(TAG,"Insert address OK")
                         onSuccess(response.body()?:1)
                     }
+                    callBackComplete.postValue("Hide progress bar")
                 }
 
             }
@@ -99,17 +107,20 @@ class NetworkControl {
         address:UserAddress,
         onSuccess:(result:Boolean)->Unit
     ){
+        callBackComplete.postValue("Show progress bar")
         service.deleteAddress(address).enqueue(
             object :Callback<Boolean>{
                 override fun onFailure(call: Call<Boolean>, t: Throwable) {
                     LogUtil.d(TAG,"Delete address failed")
                     showNetworkError()
+                    callBackComplete.postValue("Hide progress bar")
                 }
                 override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                     if(response.isSuccessful){
                         LogUtil.d(TAG,"Delete address OK")
                         onSuccess(response.body()?:false)
                     }
+                    callBackComplete.postValue("Hide progress bar")
                 }
 
             }
@@ -120,17 +131,20 @@ class NetworkControl {
         address:UserAddress,
         onSuccess:(result:Boolean)->Unit
     ){
+        callBackComplete.postValue("Show progress bar")
         service.updateAddress(address).enqueue(
             object :Callback<Boolean>{
                 override fun onFailure(call: Call<Boolean>, t: Throwable) {
                     LogUtil.d(TAG,"Update address failed")
                     showNetworkError()
+                    callBackComplete.postValue("Hide progress bar")
                 }
                 override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                     if(response.isSuccessful){
                         LogUtil.d(TAG,"Update address OK")
                         onSuccess(response.body()?:false)
                     }
+                    callBackComplete.postValue("Hide progress bar")
                 }
 
             }
@@ -138,6 +152,7 @@ class NetworkControl {
     }
 
     fun syncAddress(
+        onError:()->Unit,
         onSuccess:(result:List<UserAddress>)->Unit
     ) {
         service.syncAddress(TinyDBManager.id).enqueue(
@@ -145,6 +160,7 @@ class NetworkControl {
                 override fun onFailure(call: Call<List<UserAddress>>, t: Throwable) {
                     LogUtil.d(TAG, "Sync address failed")
                     showNetworkError()
+                    onError()
                 }
 
                 override fun onResponse(

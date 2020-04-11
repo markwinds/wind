@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bangtong.wind.R
 import com.bangtong.wind.adapter.AdsManagerAdapter
 import com.bangtong.wind.adapter.AdsManagerViewHolder
+import com.bangtong.wind.api.NetworkControl
 import com.bangtong.wind.data.TinyDBManager
 import com.bangtong.wind.model.UserAddress
 import com.bangtong.wind.util.LogUtil
@@ -29,6 +31,7 @@ class AdsManagerActivity : MyActivity() {
     private val editAddressActivityRequestAdd = 1
     private val editAddressActivityRequestEdit = 2
     private val TAG = "AdsManagerActivity_ZBT"
+    private var processBarVisible = View.GONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +51,41 @@ class AdsManagerActivity : MyActivity() {
                 swipeRefresh.isRefreshing = false
             }
         }
+        NetworkControl.callBackComplete.observe(this, Observer {
+            when(NetworkControl.callBackComplete.value){
+                "Hide progress bar" -> {
+                    if(progressBar == null){
+                        processBarVisible = View.GONE
+                        return@Observer
+                    }
+                    progressBar.visibility = View.GONE
+                    LogUtil.d(TAG,"Hide progress bar")
+                }
+                "Show progress bar" -> {
+                    if(progressBar == null){
+                        processBarVisible = View.VISIBLE
+                        return@Observer
+                    }
+                    progressBar.visibility = View.VISIBLE
+                    LogUtil.d(TAG,"Show progress bar")
+                }
+            }
+        })
+        progressBar.visibility = View.GONE
     }
 
     fun goEditAddressActivity(address: UserAddress){
         val intent = Intent(this@AdsManagerActivity, EditAddressActivity::class.java)
         intent.putExtra("address",address)
         startActivityForResult(intent, editAddressActivityRequestEdit)
+    }
+
+    fun goAddOrderActivity(address:UserAddress){
+        if(intent.getIntExtra("AddOrderActivity",0) != 0){
+            val replyIntent = Intent().putExtra("address",address)
+            setResult(Activity.RESULT_OK, replyIntent)
+            finish()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

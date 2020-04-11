@@ -3,7 +3,9 @@ package com.bangtong.wind.data
 import androidx.lifecycle.LiveData
 import com.bangtong.wind.api.NetworkControl
 import com.bangtong.wind.api.WindService
+import com.bangtong.wind.db.OrderFormDao
 import com.bangtong.wind.db.WindRoomDataBase
+import com.bangtong.wind.model.OrderForm
 import com.bangtong.wind.model.UserAddress
 import com.bangtong.wind.util.MyApplication
 import com.bangtong.wind.util.TinyDB
@@ -20,6 +22,7 @@ class WindRepository {
     private val service = WindService.getService()
     private val networkControl = NetworkControl()
     private val addressDao = windRoomDataBase.addressDao()
+    private val orderFormDao = windRoomDataBase.orderFormDao()
 
     fun getAllAddress(): LiveData<List<UserAddress>> {
         return addressDao.getAllAddress(TinyDBManager.id)
@@ -61,19 +64,25 @@ class WindRepository {
     }
 
     suspend fun syncAddressCloud(
-        onSuccess:()->Unit
+        onComplete:()->Unit
     ){
-        networkControl.syncAddress() {
+        networkControl.syncAddress({
+            onComplete()
+        }, {
             if (it.isNotEmpty()){
                 GlobalScope.launch {
                     addressDao.deleteAll()
                     for (ads in it){
                         addressDao.insert(ads)
                     }
-                    onSuccess() // 刷新结束的操作
+                    onComplete()
                 }
             }
-        }
+        })
     }
+
+    fun getAllOrder():LiveData<List<OrderForm>> =
+        orderFormDao.getAllOrder(TinyDBManager.id)
+
 
 }

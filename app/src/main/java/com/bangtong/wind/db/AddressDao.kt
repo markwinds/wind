@@ -9,7 +9,7 @@ interface AddressDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vararg userAddresses:UserAddress)
-    @Query("SELECT * FROM address WHERE user=:user")
+    @Query("SELECT * FROM address WHERE user=:user AND live=1")
     fun getAllAddress(user:String): LiveData<List<UserAddress>>
     @Delete
     suspend fun delete(vararg userAddresses:UserAddress) // 根据传入结构体的主键自动删除

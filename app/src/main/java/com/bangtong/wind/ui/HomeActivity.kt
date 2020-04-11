@@ -35,8 +35,8 @@ class HomeActivity : MyActivity() {
             }
             return@setNavigationItemSelectedListener true
         }
-        edit.setOnClickListener{
-            val intent = Intent(this,EditAddressActivity::class.java)
+        addOrder.setOnClickListener{
+            val intent = Intent(this,AddOrderActivity::class.java)
             startActivity(intent)
         }
     }

@@ -75,7 +75,7 @@ class EditAddressActivity : MyActivity() {
                 !TextUtils.isEmpty(area.text) && !TextUtils.isEmpty(address.text)) {
                 val list = area.text.toString().split(" ")
                 val tempAddress = UserAddress(addressId, TinyDBManager.id,name.text.toString(),phone.text.toString(),list[0],list[1],
-                    list[2],address.text.toString())
+                    list[2],address.text.toString(),true)
                 LogUtil.d(TAG,"Commit address ${TinyDBManager.id} ${name.text} ${phone.text} ${list[0]} ${list[1]} ${list[2]} ${address.text}")
                 val replyIntent = Intent().putExtra("address",tempAddress)
                 setResult(Activity.RESULT_OK, replyIntent)

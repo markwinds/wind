@@ -16,5 +16,6 @@ data class UserAddress(
     @field:SerializedName("province")val province:String,
     @field:SerializedName("city")val city:String,
     @field:SerializedName("area")val area:String,
-    @field:SerializedName("location")val location:String
+    @field:SerializedName("location")val location:String,
+    @field:SerializedName("live")var live:Boolean
 ): Parcelable
