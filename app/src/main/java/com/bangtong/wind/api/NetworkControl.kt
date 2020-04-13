@@ -3,6 +3,7 @@ package com.bangtong.wind.api
 import androidx.lifecycle.MutableLiveData
 import com.bangtong.wind.R
 import com.bangtong.wind.data.TinyDBManager
+import com.bangtong.wind.model.OrderForm
 import com.bangtong.wind.model.User
 import com.bangtong.wind.model.UserAddress
 import com.bangtong.wind.util.LogUtil
@@ -171,6 +172,80 @@ class NetworkControl {
                         LogUtil.d(TAG, "Sync address OK")
                         onSuccess(response.body() ?: emptyList<UserAddress>())
                     }
+                }
+
+            }
+        )
+    }
+
+    fun insertOrder(
+        order:OrderForm,
+        onSuccess:(id:Long)->Unit
+    ){
+        callBackComplete.postValue("Show progress bar")
+        service.insertOrder(order).enqueue(
+            object :Callback<Long>{
+                override fun onFailure(call: Call<Long>, t: Throwable) {
+                    LogUtil.d(TAG,"Insert order failed")
+                    showNetworkError()
+                    callBackComplete.postValue("Hide progress bar")
+                }
+                override fun onResponse(call: Call<Long>, response: Response<Long>) {
+                    if(response.isSuccessful){
+                        LogUtil.d(TAG,"Insert order OK")
+                        onSuccess(response.body()?:1)
+                    }
+                    callBackComplete.postValue("Hide progress bar")
+                }
+
+            }
+        )
+    }
+
+    fun syncOrder(
+        onSuccess:(result:List<OrderForm>)->Unit
+    ) {
+        callBackComplete.postValue("Show progress bar")
+        service.syncOrder(TinyDBManager.id).enqueue(
+            object : Callback<List<OrderForm>> {
+                override fun onFailure(call: Call<List<OrderForm>>, t: Throwable) {
+                    LogUtil.d(TAG, "Sync order failed")
+                    showNetworkError()
+                    callBackComplete.postValue("Hide progress bar")
+                }
+                override fun onResponse(
+                    call: Call<List<OrderForm>>,
+                    response: Response<List<OrderForm>>
+                ) {
+                    if (response.isSuccessful) {
+                        LogUtil.d(TAG, "Sync order OK")
+                        onSuccess(response.body() ?: emptyList<OrderForm>())
+                    }
+                    callBackComplete.postValue("Hide progress bar")
+                }
+
+            }
+        )
+    }
+
+    fun deleteOrder(
+        order: OrderForm,
+        onSuccess:(result:Boolean)->Unit
+    ){
+        callBackComplete.postValue("Show progress bar")
+        service.deleteOrder(order).enqueue(
+            object :Callback<Boolean>{
+                override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                    LogUtil.d(TAG,"Delete order failed")
+                    showNetworkError()
+                    callBackComplete.postValue("Hide progress bar")
+                }
+                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                    if(response.isSuccessful){
+                        LogUtil.d(TAG,"Delete address OK")
+                        onSuccess(response.body()?:false)
+                    }
+                    callBackComplete.postValue("Hide progress bar")
                 }
 
             }

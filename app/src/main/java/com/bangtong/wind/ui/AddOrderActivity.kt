@@ -10,8 +10,11 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.bangtong.wind.R
+import com.bangtong.wind.data.TinyDBManager
+import com.bangtong.wind.model.OrderForm
 import com.bangtong.wind.model.UserAddress
 import com.bangtong.wind.util.MyActivity
+import com.bangtong.wind.util.TimeControl
 import com.bangtong.wind.view.AddOrderViewModel
 import kotlinx.android.synthetic.main.activity_add_order.*
 
@@ -37,6 +40,15 @@ class AddOrderActivity : MyActivity() {
             val intent = Intent(this@AddOrderActivity, AdsManagerActivity::class.java)
             intent.putExtra("AddOrderActivity",receiverCode)
             startActivityForResult(intent, receiverCode)
+        }
+        submit.setOnClickListener{
+            if(viewModel.receiverText.value != null && viewModel.senderText.value != null){
+                val order = OrderForm(0,TinyDBManager.id,viewModel.senderText.value!!,viewModel.receiverText.value!!,
+                    remark.text.toString(),TimeControl.getTimeToLong(),0,0)
+                val replyIntent = Intent().putExtra("order",order)
+                setResult(Activity.RESULT_OK, replyIntent)
+                finish()
+            }
         }
         viewModel.receiverText.observe(this, Observer {
             receiver.text = viewModel.getTextByAddress(viewModel.receiverText.value!!)

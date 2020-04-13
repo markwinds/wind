@@ -17,4 +17,6 @@ interface AddressDao {
     suspend fun updateAddress(vararg userAddresses:UserAddress)
     @Query("DELETE FROM address")
     suspend fun deleteAll()
+    @Query("SELECT * FROM address WHERE id=:id")
+    suspend fun getAddressById(id:Long):UserAddress
 }

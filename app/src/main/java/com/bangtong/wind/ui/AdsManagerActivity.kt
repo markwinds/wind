@@ -31,7 +31,7 @@ class AdsManagerActivity : MyActivity() {
     private val editAddressActivityRequestAdd = 1
     private val editAddressActivityRequestEdit = 2
     private val TAG = "AdsManagerActivity_ZBT"
-    private var processBarVisible = View.GONE
+    private var progressBarVisible = View.GONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,7 @@ class AdsManagerActivity : MyActivity() {
             when(NetworkControl.callBackComplete.value){
                 "Hide progress bar" -> {
                     if(progressBar == null){
-                        processBarVisible = View.GONE
+                        progressBarVisible = View.GONE
                         return@Observer
                     }
                     progressBar.visibility = View.GONE
@@ -63,7 +63,7 @@ class AdsManagerActivity : MyActivity() {
                 }
                 "Show progress bar" -> {
                     if(progressBar == null){
-                        processBarVisible = View.VISIBLE
+                        progressBarVisible = View.VISIBLE
                         return@Observer
                     }
                     progressBar.visibility = View.VISIBLE

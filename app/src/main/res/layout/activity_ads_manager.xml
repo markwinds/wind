@@ -22,6 +22,7 @@
         android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/listBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +32,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#F0F0F0" />
+            android:background="#F0F0F0"
+            android:padding="@dimen/card_margin" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

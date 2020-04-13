@@ -28,6 +28,9 @@ class WindRepository {
         return addressDao.getAllAddress(TinyDBManager.id)
     }
 
+    suspend fun getAddressById(id:Long):UserAddress =
+        addressDao.getAddressById(id)
+
     suspend fun insertAddress(address:UserAddress){
         addressDao.insert(address)
     }
@@ -84,5 +87,39 @@ class WindRepository {
     fun getAllOrder():LiveData<List<OrderForm>> =
         orderFormDao.getAllOrder(TinyDBManager.id)
 
+    suspend fun insertOrderCloud(order:OrderForm){
+        networkControl.insertOrder(order) {
+            order.id = it
+            if(order.id != 1.toLong()){
+                GlobalScope.launch {
+                    orderFormDao.insert(order)
+                }
+            }
+        }
+    }
+
+    suspend fun syncOrderCloud(
+    ){
+        networkControl.syncOrder() {
+            if (it.isNotEmpty()){
+                GlobalScope.launch {
+                    orderFormDao.deleteAll()
+                    for (order in it){
+                        orderFormDao.insert(order)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun deleteOrderCloud(order: OrderForm){
+        networkControl.deleteOrder(order) {
+            if (it){
+                GlobalScope.launch {
+                    orderFormDao.delete(order)
+                }
+            }
+        }
+    }
 
 }

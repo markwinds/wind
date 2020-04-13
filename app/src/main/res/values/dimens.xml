@@ -4,4 +4,7 @@
     <dimen name="address_name">8dp</dimen>
     <dimen name="address_address">4dp</dimen>
     <dimen name="circle_size">9dp</dimen>
+    <dimen name="card_margin">4dp</dimen>
+    <dimen name="card_radius">6dp</dimen>
+    <dimen name="card_high">4dp</dimen>
 </resources>

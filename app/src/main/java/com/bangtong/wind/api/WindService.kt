@@ -1,5 +1,6 @@
 package com.bangtong.wind.api
 
+import com.bangtong.wind.model.OrderForm
 import com.bangtong.wind.model.User
 import com.bangtong.wind.model.UserAddress
 import okhttp3.OkHttpClient
@@ -45,6 +46,21 @@ interface WindService {
     @POST("address/update")
     fun updateAddress(
         @Body address:UserAddress
+    ):Call<Boolean>
+
+    @POST("order/insert")
+    fun insertOrder(
+        @Body order:OrderForm
+    ):Call<Long>
+
+    @GET("order")
+    fun syncOrder(
+        @Query("user") order:String
+    ):Call<List<OrderForm>>
+
+    @POST("order/delete")
+    fun deleteOrder(
+        @Body order: OrderForm
     ):Call<Boolean>
 
     companion object {

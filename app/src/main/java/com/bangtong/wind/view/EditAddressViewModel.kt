@@ -66,7 +66,7 @@ class EditAddressViewModel:ViewModel() {
                 area.postValue(temp)
         }).setTitleText(MyActivity.getTopActivity().getString(R.string.choose_location))
             .setSubmitText(MyActivity.getTopActivity().getString(R.string.submit))//确定按钮文字
-            .setCancelText(MyActivity.getTopActivity().getString(R.string.cancle))//取消按钮文字
+            .setCancelText(MyActivity.getTopActivity().getString(R.string.cancel))//取消按钮文字
             .setOutSideCancelable(false)
             .isDialog(true)
             .build<Any>()
