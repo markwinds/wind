@@ -1,14 +1,17 @@
 package com.bangtong.wind.data
 
 import androidx.lifecycle.LiveData
+import com.bangtong.wind.R
 import com.bangtong.wind.api.NetworkControl
 import com.bangtong.wind.api.WindService
 import com.bangtong.wind.db.OrderFormDao
 import com.bangtong.wind.db.WindRoomDataBase
+import com.bangtong.wind.model.BoxIfo
 import com.bangtong.wind.model.OrderForm
 import com.bangtong.wind.model.UserAddress
 import com.bangtong.wind.util.MyApplication
 import com.bangtong.wind.util.TinyDB
+import com.bangtong.wind.util.ToastUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ class WindRepository {
     private val networkControl = NetworkControl()
     private val addressDao = windRoomDataBase.addressDao()
     private val orderFormDao = windRoomDataBase.orderFormDao()
+    private val boxIfoDao = windRoomDataBase.boxIfoDao()
 
     fun getAllAddress(): LiveData<List<UserAddress>> {
         return addressDao.getAllAddress(TinyDBManager.id)
@@ -121,5 +125,68 @@ class WindRepository {
             }
         }
     }
+
+    fun getBoxIfo(boxId:Long):LiveData<List<BoxIfo>> =
+        boxIfoDao.getBoxIfo(boxId)
+
+    suspend fun getBoxIfoCloud(boxId:Long){
+        networkControl.getBoxIfo(boxId) {
+            if (it.isNotEmpty()){
+                GlobalScope.launch {
+                    boxIfoDao.insert(it)
+                }
+            }
+        }
+    }
+
+    suspend fun insertBoxIfoCloud(boxIfo: BoxIfo){
+        networkControl.insertBoxIfo(boxIfo){
+            boxIfo.id = it
+            if (it != 0.toLong()){
+                GlobalScope.launch {
+                    withContext(Dispatchers.Main){
+                        ToastUtil.showLong("Insert OK")
+                    }
+                    boxIfoDao.insert(arrayListOf(boxIfo))
+                }
+            }
+        }
+    }
+
+    fun bindOrderBox(boxId: Long,orderId:Long){
+        networkControl.bindOrderBox(boxId,orderId){
+            GlobalScope.launch {
+                withContext(Dispatchers.Main){
+                    if(it){
+                        ToastUtil.showLong(MyApplication.context.getString(R.string.bind_ok))
+                    }else{
+                        ToastUtil.showLong(MyApplication.context.getString(R.string.bind_failed))
+                    }
+                }
+            }
+        }
+    }
+
+    fun unbindOrderBox(boxId: Long){
+        networkControl.unbindOrderBox(boxId){
+            GlobalScope.launch {
+                withContext(Dispatchers.Main){
+                    if(it){
+                        ToastUtil.showLong(MyApplication.context.getString(R.string.unbind_ok))
+                    }else{
+                        ToastUtil.showLong(MyApplication.context.getString(R.string.unbind_failed))
+                    }
+                }
+            }
+        }
+    }
+
+//    fun lock(boxId:Long,enable:Boolean){
+//        networkControl.lock(boxId,enable)
+//    }
+//
+//    fun unlock(boxId:Long,enable:Boolean){
+//        networkControl.unlock(boxId,enable)
+//    }
 
 }

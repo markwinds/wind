@@ -24,6 +24,8 @@ class LogViewModel:ViewModel(){
             if (result == "OK"){
                 LogUtil.d(TAG,"log in success")
                 TinyDBManager.saveData(id,pwd)
+                TinyDBManager.id = id
+                TinyDBManager.pwd = pwd
                 logState.postValue("OK")
             }else{
                 LogUtil.d(TAG,"log in failed")

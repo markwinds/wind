@@ -100,8 +100,20 @@
                     app:layout_constraintStart_toStartOf="@id/guideline29"
                     app:layout_constraintTop_toTopOf="@+id/state" />
 
+                <TextView
+                    android:id="@+id/boxId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="21dp"
+                    android:text="TextView"
+                    app:layout_constraintBottom_toBottomOf="@+id/arrow"
+                    app:layout_constraintEnd_toEndOf="@+id/arrow"
+                    app:layout_constraintStart_toStartOf="@+id/arrow"
+                    tools:text="23456" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </com.chauthai.swipereveallayout.SwipeRevealLayout>
     </androidx.cardview.widget.CardView>
 

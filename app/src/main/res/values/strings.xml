@@ -40,5 +40,16 @@
     <string name="in_transmit">In transmit</string>
     <string name="completed">Completed</string>
     <string name="no_package">No package</string>
+    <string name="google_maps_key">"AIzaSyDEuablAfotX6vcJppMuLZybwYnSiSBgvI"</string>
+    <string name="location">Location</string>
+    <string name="temperature">Temperature</string>
+    <string name="language">en</string>
+    <string name="starting">Starting</string>
+    <string name="now_location">Now location</string>
+    <string name="confirm_bind">Do you want bind this box?</string>
+    <string name="bind_ok">Bind box success!</string>
+    <string name="bind_failed">Bind box failed!</string>
+    <string name="unbind_ok">Receive success!</string>
+    <string name="unbind_failed">Receive failed!</string>
 
 </resources>

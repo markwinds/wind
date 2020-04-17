@@ -16,6 +16,8 @@ class HomeViewModel:ViewModel() {
 
     private val repository = WindRepository()
     val orderForms = repository.getAllOrder()
+    var debugCount = 0
+    var orderId:Long = 0
 
     fun insertCloud(order: OrderForm) = viewModelScope.launch(Dispatchers.IO){
         repository.insertOrderCloud(order)
@@ -45,5 +47,13 @@ class HomeViewModel:ViewModel() {
         spannableString.setSpan(AbsoluteSizeSpan(60),0,top.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(AbsoluteSizeSpan(30),top.length+1,top.length+bottom.length+1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         return spannableString
+    }
+
+    fun bindOrderBox(boxId:Long,orderId:Long){
+        repository.bindOrderBox(boxId, orderId)
+    }
+
+    fun unbindOrderBox(boxId: Long){
+        repository.unbindOrderBox(boxId)
     }
 }

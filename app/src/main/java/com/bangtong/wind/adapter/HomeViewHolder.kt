@@ -13,10 +13,13 @@ import com.bangtong.wind.R
 import com.bangtong.wind.data.TinyDBManager
 import com.bangtong.wind.model.OrderForm
 import com.bangtong.wind.ui.HomeActivity
+import com.bangtong.wind.ui.TransmitOrderActivity
 import com.bangtong.wind.util.LogUtil
 import com.bangtong.wind.util.MyActivity
+import com.bangtong.wind.util.MyApplication
 import com.bangtong.wind.util.ToastUtil
 import com.chauthai.swipereveallayout.SwipeRevealLayout
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.delete_scan.*
 
 class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
@@ -29,6 +32,8 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
     private val delete:ImageView = view.findViewById(R.id.delete)
     private val scan:ImageView = view.findViewById(R.id.scan)
     private val mainView = view.findViewById<View>(R.id.mainView)
+    private val boxId = view.findViewById<TextView>(R.id.boxId)
+    private val check = view.findViewById<ImageView>(R.id.check)
 
 
     fun bind(order:OrderForm?){
@@ -37,6 +42,15 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                 state.text = MyActivity.getTopActivity().getString(R.string.r)
             }else{
                 state.text = MyActivity.getTopActivity().getString(R.string.s)
+            }
+            when(order.boxId){
+                (0).toLong() -> {
+                    boxId.text = MyApplication.context.getString(R.string.bindBox)
+                }
+                (-1).toLong() -> {
+                    boxId.text = MyApplication.context.getString(R.string.completed)
+                }
+                else -> boxId.text = order.boxId.toString()
             }
             sender.text = viewModel.getTextByOrderSender(order)
             receiver.text = viewModel.getTextByOrderReceiver(order)
@@ -51,19 +65,35 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                 }
             }
             scan.setOnClickListener{
-                (MyActivity.getTopActivity() as HomeActivity).goScanActivity()
+                (MyActivity.getTopActivity() as HomeActivity).viewModel.orderId = order.id
+                IntentIntegrator((MyActivity.getTopActivity() as HomeActivity)).setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES)// 扫码的类型,可选：一维码，二维码，一/二维码
+                    //.setPrompt("请对准二维码")// 设置提示语
+                    .setCameraId(0)// 选择摄像头,可使用前置或者后置
+                    .setBeepEnabled(true)// 是否开启声音,扫完码之后会"哔"的一声
+                    .setBarcodeImageEnabled(false)// 扫完码之后生成二维码的图片
+                    .initiateScan();// 初始化扫码
+            }
+            check.setOnClickListener{
+                (MyActivity.getTopActivity() as HomeActivity).viewModel.unbindOrderBox(order.boxId)
             }
             when(order.boxId){
                 0.toLong() -> {
-                    swipeRevealLayout.setLockDrag(false)
+                    //swipeRevealLayout.setLockDrag(false)
                     scan.visibility = View.VISIBLE
+                    delete.visibility = View.VISIBLE
+                    check.visibility = View.GONE
                 }
                 (-1).toLong() -> {
-                    swipeRevealLayout.setLockDrag(false)
+                    //swipeRevealLayout.setLockDrag(false)
                     scan.visibility = View.GONE
+                    delete.visibility = View.VISIBLE
+                    check.visibility = View.GONE
                 }
                 else -> {
-                    swipeRevealLayout.setLockDrag(true)
+                    //swipeRevealLayout.setLockDrag(true)
+                    scan.visibility = View.GONE
+                    delete.visibility = View.GONE
+                    check.visibility = View.VISIBLE
                 }
             }
             mainView.setOnClickListener{
@@ -79,7 +109,9 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                         (MyActivity.getTopActivity() as HomeActivity).goCompletedOrderActivity(order)
                     }
                     else -> {
-                        //LogUtil.d("hello","tra")
+                        val intent = Intent(MyActivity.getTopActivity() as HomeActivity,TransmitOrderActivity::class.java)
+                        intent.putExtra("order",order)
+                        (MyActivity.getTopActivity() as HomeActivity).startActivity(intent)
                     }
                 }
             }

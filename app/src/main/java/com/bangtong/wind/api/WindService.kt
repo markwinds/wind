@@ -1,8 +1,6 @@
 package com.bangtong.wind.api
 
-import com.bangtong.wind.model.OrderForm
-import com.bangtong.wind.model.User
-import com.bangtong.wind.model.UserAddress
+import com.bangtong.wind.model.*
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,6 +61,39 @@ interface WindService {
         @Body order: OrderForm
     ):Call<Boolean>
 
+    @GET("boxIfo")
+    fun getBoxIfo(
+        @Query("id") id:Long
+    ):Call<List<BoxIfo>>
+
+    @POST("boxIfo/insert")
+    fun insertBoxIfo(
+        @Body boxIfo: BoxIfo
+    ):Call<Long>
+
+    @GET("bind")
+    fun bindOrderBox(
+        @Query("boxId") boxId:Long,
+        @Query("orderId")orderId:Long
+    ):Call<Boolean>
+
+    @GET("unBind")
+    fun unbindOrderBox(
+        @Query("boxId") boxId:Long
+    ):Call<Boolean>
+
+    @GET("lock")
+    fun lock(
+        @Query("boxId") boxId:Long,
+        @Query("enable")enable:Boolean
+    ):Call<Boolean>
+
+    @GET("unlock")
+    fun unlock(
+        @Query("boxId") boxId:Long,
+        @Query("enable")enable:Boolean
+    ):Call<Boolean>
+
     companion object {
         private const val BASE_URL = "http://10.0.2.2:8080/cloud/"
         var INSTANCE:WindService? = null
@@ -82,5 +113,36 @@ interface WindService {
                 .build()
                 .create(WindService::class.java).also { INSTANCE = it }
         }
+    }
+}
+
+interface GoogleGeocodeService {
+
+    @GET("json")
+    fun getLocationName(
+        @Query("latlng") latlng:String, // 经纬度
+        @Query("language") language:String, // 返回地址的语言
+        @Query("key") key:String // google API key
+    ):Call<GoogleAddress>
+
+    companion object {
+        private const val BASE_URL = "https://maps.googleapis.com/maps/api/geocode/"
+        var INSTANCE:GoogleGeocodeService? = null
+
+        fun getService(): GoogleGeocodeService =
+            INSTANCE?: synchronized(this){
+                val logger = HttpLoggingInterceptor()
+                logger.level = Level.BASIC
+                val client = OkHttpClient.Builder()
+                    .addInterceptor(logger)
+                    .build()
+                Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(client)
+                    .addConverterFactory(ScalarsConverterFactory.create()) // 这个factory要第一个添加
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(GoogleGeocodeService::class.java).also { INSTANCE = it }
+            }
     }
 }
