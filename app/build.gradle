@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.bangtong.wind"
-        minSdkVersion 24
+        minSdkVersion 22
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -117,7 +117,7 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zbar:1.9.13'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation ('com.journeyapps:zxing-android-embedded:4.1.0'){ transitive = false }
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.google.zxing:core:3.3.0'
 }

@@ -133,6 +133,7 @@ class WindRepository {
         networkControl.getBoxIfo(boxId) {
             if (it.isNotEmpty()){
                 GlobalScope.launch {
+                    boxIfoDao.deleteAll()
                     boxIfoDao.insert(it)
                 }
             }

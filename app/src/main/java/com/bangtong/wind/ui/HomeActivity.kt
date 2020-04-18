@@ -107,7 +107,7 @@ class HomeActivity : MyActivity(){
                 userName.text = TinyDBManager.id
                 circleImageView.setOnClickListener{
                     viewModel.debugCount++
-                    if (viewModel.debugCount>5){
+                    if (viewModel.debugCount>2){
                         viewModel.debugCount = 0
                         val intent = Intent(this,DebugActivity::class.java)
                         startActivity(intent)
@@ -149,7 +149,10 @@ class HomeActivity : MyActivity(){
             val completedList:MutableList<OrderForm> = ArrayList()
             for (order in tempList){
                 when(order.boxId){
-                    0.toLong() -> waitList.add(order)
+                    0.toLong() -> {
+                        if(order.user == TinyDBManager.id)
+                            waitList.add(order)
+                    }
                     (-1).toLong() -> completedList.add(order)
                     else -> transitList.add(order)
                 }
