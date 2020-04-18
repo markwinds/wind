@@ -9,6 +9,10 @@ import com.bangtong.wind.util.LogUtil
 import com.bangtong.wind.util.MyActivity
 import com.bangtong.wind.util.MyApplication
 import com.bangtong.wind.util.ToastUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +32,11 @@ class NetworkControl {
     private val googleGeocodeService = GoogleGeocodeService.getService()
 
     fun showNetworkError(){
-        ToastUtil.showLong(MyApplication.context.getString(R.string.network_error))
+        GlobalScope.launch {
+            withContext(Dispatchers.Main){
+                ToastUtil.showLong(MyApplication.context.getString(R.string.network_error))
+            }
+        }
     }
 
     fun getAddressByLatlng(latlng:String){

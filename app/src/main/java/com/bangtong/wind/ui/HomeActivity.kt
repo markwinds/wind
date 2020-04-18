@@ -52,6 +52,7 @@ class HomeActivity : MyActivity(){
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
         observeData()
         initListener()
+        //LogUtil.e("hello","${this::class.qualifiedName}")
         packageNull.visibility = View.GONE
         recyclerView.adapter = waitAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)

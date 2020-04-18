@@ -21,6 +21,10 @@ import com.bangtong.wind.util.LogUtil
 import com.bangtong.wind.util.MyActivity
 import com.bangtong.wind.view.AdsManagerViewModel
 import kotlinx.android.synthetic.main.activity_ads_manager.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class AdsManagerActivity : MyActivity() {
@@ -48,7 +52,11 @@ class AdsManagerActivity : MyActivity() {
         })
         swipeRefresh.setOnRefreshListener {
             viewModel.syncCloud {
-                swipeRefresh.isRefreshing = false
+                GlobalScope.launch {
+                    withContext(Dispatchers.Main){
+                        swipeRefresh.isRefreshing = false
+                    }
+                }
             }
         }
         NetworkControl.callBackComplete.observe(this, Observer {

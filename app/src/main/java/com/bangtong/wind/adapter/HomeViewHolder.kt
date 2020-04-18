@@ -24,10 +24,11 @@ import kotlinx.android.synthetic.main.delete_scan.*
 
 class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
+    private val holderContext:HomeActivity = MyActivity.getTopActivityWithType("HomeActivity") as HomeActivity
     private val sender: TextView = view.findViewById(R.id.sender)
     private val receiver: TextView = view.findViewById(R.id.receiver)
     private val state: TextView = view.findViewById(R.id.state)
-    private val viewModel = (MyActivity.getTopActivity() as HomeActivity).viewModel
+    private val viewModel = holderContext.viewModel
     val swipeRevealLayout: SwipeRevealLayout = view.findViewById(R.id.swipeRevealLayout)
     private val delete:ImageView = view.findViewById(R.id.delete)
     private val scan:ImageView = view.findViewById(R.id.scan)
@@ -55,18 +56,18 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
             sender.text = viewModel.getTextByOrderSender(order)
             receiver.text = viewModel.getTextByOrderReceiver(order)
             delete.setOnClickListener{
-                MaterialDialog((MyActivity.getTopActivity() as HomeActivity)).show {
+                MaterialDialog(holderContext).show {
                     message(R.string.confirm_delete)
                     positiveButton(R.string.confirm){
-                        (MyActivity.getTopActivity() as HomeActivity).viewModel.deleteCloud(order)
+                        holderContext.viewModel.deleteCloud(order)
                     }
                     negativeButton(android.R.string.cancel)
                     cornerRadius(10f) // 角半径
                 }
             }
             scan.setOnClickListener{
-                (MyActivity.getTopActivity() as HomeActivity).viewModel.orderId = order.id
-                IntentIntegrator((MyActivity.getTopActivity() as HomeActivity)).setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)// 扫码的类型,可选：一维码，二维码，一/二维码
+                holderContext.viewModel.orderId = order.id
+                IntentIntegrator(holderContext).setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)// 扫码的类型,可选：一维码，二维码，一/二维码
                     //.setPrompt("请对准二维码")// 设置提示语
                     .setCameraId(0)// 选择摄像头,可使用前置或者后置
                     .setBeepEnabled(true)// 是否开启声音,扫完码之后会"哔"的一声
@@ -74,7 +75,7 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                     .initiateScan();// 初始化扫码
             }
             check.setOnClickListener{
-                (MyActivity.getTopActivity() as HomeActivity).viewModel.unbindOrderBox(order.boxId)
+                holderContext.viewModel.unbindOrderBox(order.boxId)
             }
             when(order.boxId){
                 0.toLong() -> {
@@ -110,12 +111,12 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                         }
                     }
                     (-1).toLong() -> {
-                        (MyActivity.getTopActivity() as HomeActivity).goCompletedOrderActivity(order)
+                        holderContext.goCompletedOrderActivity(order)
                     }
                     else -> {
-                        val intent = Intent(MyActivity.getTopActivity() as HomeActivity,TransmitOrderActivity::class.java)
+                        val intent = Intent(holderContext,TransmitOrderActivity::class.java)
                         intent.putExtra("order",order)
-                        (MyActivity.getTopActivity() as HomeActivity).startActivity(intent)
+                        holderContext.startActivity(intent)
                     }
                 }
             }
