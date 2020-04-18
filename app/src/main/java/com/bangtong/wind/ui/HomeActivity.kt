@@ -39,9 +39,9 @@ class HomeActivity : MyActivity(){
     private val waitAdapter = HomeAdapter()
     private val transitAdapter = HomeAdapter()
     private val completedAdapter = HomeAdapter()
-    private val waitList:MutableList<OrderForm> = ArrayList()
-    private val transitList:MutableList<OrderForm> = ArrayList()
-    private val completedList:MutableList<OrderForm> = ArrayList()
+    private var waitListEmpty = true
+    private var transitListEmpty = true
+    private var completedListEmpty = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,9 +144,9 @@ class HomeActivity : MyActivity(){
     private fun observeData(){
         viewModel.orderForms.observe(this, Observer {
             val tempList = viewModel.orderForms.value?: emptyList()
-            waitList.clear()
-            transitList.clear()
-            completedList.clear()
+            val waitList:MutableList<OrderForm> = ArrayList()
+            val transitList:MutableList<OrderForm> = ArrayList()
+            val completedList:MutableList<OrderForm> = ArrayList()
             for (order in tempList){
                 when(order.boxId){
                     0.toLong() -> waitList.add(order)
@@ -154,22 +154,12 @@ class HomeActivity : MyActivity(){
                     else -> transitList.add(order)
                 }
             }
-            LogUtil.d("hello","submit")
-            if (recyclerView.adapter == waitAdapter){
-                LogUtil.d("hello","waitAdapter")
-            }
-            if (recyclerView.adapter == transitList){
-                LogUtil.d("hello","transitList")
-            }
-            if (recyclerView.adapter == completedList){
-                LogUtil.d("hello","completedList")
-            }
             waitAdapter.submitList(waitList)
-            waitAdapter.notifyDataSetChanged()
             transitAdapter.submitList(transitList)
-            transitAdapter.notifyDataSetChanged()
             completedAdapter.submitList(completedList)
-            completedAdapter.notifyDataSetChanged()
+            waitListEmpty = waitList.isEmpty()
+            transitListEmpty = transitList.isEmpty()
+            completedListEmpty = completedList.isEmpty()
         })
         NetworkControl.callBackComplete.observe(this, Observer {
             when(NetworkControl.callBackComplete.value){
@@ -201,20 +191,25 @@ class HomeActivity : MyActivity(){
                 R.id.bindBox -> {
                     drawerLayout.closeDrawers()
                     recyclerView.adapter = waitAdapter
-                    packageNull.visibility = if (waitList.isEmpty()) View.VISIBLE else View.GONE
+                    packageNull.visibility = if (waitListEmpty) View.VISIBLE else View.GONE
                     buttonMenu.close(true)
                 }
                 R.id.transmit -> {
                     drawerLayout.closeDrawers()
                     recyclerView.adapter = transitAdapter
-                    packageNull.visibility = if (transitList.isEmpty()) View.VISIBLE else View.GONE
+                    packageNull.visibility = if (transitListEmpty) View.VISIBLE else View.GONE
                     buttonMenu.close(true)
                 }
                 R.id.completed -> {
                     drawerLayout.closeDrawers()
                     recyclerView.adapter = completedAdapter
-                    packageNull.visibility = if (completedList.isEmpty()) View.VISIBLE else View.GONE
+                    packageNull.visibility = if (completedListEmpty) View.VISIBLE else View.GONE
                     buttonMenu.close(true)
+                }
+                R.id.log_out -> {
+                    TinyDBManager.logOut()
+                    val intent = Intent(this,LogActivity::class.java)
+                    startActivity(intent)
                 }
                 else -> {
                     drawerLayout.closeDrawers()
@@ -228,17 +223,17 @@ class HomeActivity : MyActivity(){
         }
         bindBox.setOnClickListener {
             recyclerView.adapter = waitAdapter
-            packageNull.visibility = if (waitList.isEmpty()) View.VISIBLE else View.GONE
+            packageNull.visibility = if (waitListEmpty) View.VISIBLE else View.GONE
             buttonMenu.close(true)
         }
         transmit.setOnClickListener {
             recyclerView.adapter = transitAdapter
-            packageNull.visibility = if (transitList.isEmpty()) View.VISIBLE else View.GONE
+            packageNull.visibility = if (transitListEmpty) View.VISIBLE else View.GONE
             buttonMenu.close(true)
         }
         completed.setOnClickListener {
             recyclerView.adapter = completedAdapter
-            packageNull.visibility = if (completedList.isEmpty()) View.VISIBLE else View.GONE
+            packageNull.visibility = if (completedListEmpty) View.VISIBLE else View.GONE
             buttonMenu.close(true)
         }
         swipeRefresh.setOnRefreshListener{

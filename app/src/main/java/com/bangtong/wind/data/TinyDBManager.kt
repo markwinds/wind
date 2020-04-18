@@ -7,8 +7,8 @@ class TinyDBManager {
 
     companion object{
         private val tinyDB = TinyDB(MyApplication.context)
-        var id = ""
-        var pwd = ""
+        var id: String = tinyDB.getString("userId")
+        var pwd:String = tinyDB.getString("userPwd")
 
         fun skip():Boolean{
             id = tinyDB.getString("userId")
@@ -20,6 +20,10 @@ class TinyDBManager {
             tinyDB.putString("userId",id)
             tinyDB.putString("userPwd",pwd)
             tinyDB.putString("skip","OK")
+        }
+
+        fun logOut(){
+            tinyDB.putString("skip","NO")
         }
     }
 

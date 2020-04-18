@@ -66,7 +66,7 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
             }
             scan.setOnClickListener{
                 (MyActivity.getTopActivity() as HomeActivity).viewModel.orderId = order.id
-                IntentIntegrator((MyActivity.getTopActivity() as HomeActivity)).setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES)// 扫码的类型,可选：一维码，二维码，一/二维码
+                IntentIntegrator((MyActivity.getTopActivity() as HomeActivity)).setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)// 扫码的类型,可选：一维码，二维码，一/二维码
                     //.setPrompt("请对准二维码")// 设置提示语
                     .setCameraId(0)// 选择摄像头,可使用前置或者后置
                     .setBeepEnabled(true)// 是否开启声音,扫完码之后会"哔"的一声
@@ -93,7 +93,11 @@ class HomeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                     //swipeRevealLayout.setLockDrag(true)
                     scan.visibility = View.GONE
                     delete.visibility = View.GONE
-                    check.visibility = View.VISIBLE
+                    if(order.receiverPhone == TinyDBManager.id){
+                        check.visibility = View.VISIBLE
+                    }else{
+                        check.visibility = View.GONE
+                    }
                 }
             }
             mainView.setOnClickListener{

@@ -77,7 +77,7 @@ interface WindService {
         @Query("orderId")orderId:Long
     ):Call<Boolean>
 
-    @GET("unBind")
+    @GET("unbind")
     fun unbindOrderBox(
         @Query("boxId") boxId:Long
     ):Call<Boolean>
@@ -95,7 +95,8 @@ interface WindService {
     ):Call<Boolean>
 
     companion object {
-        private const val BASE_URL = "http://10.0.2.2:8080/cloud/"
+        //private const val BASE_URL = "http://10.0.2.2:8080/cloud/"
+        private const val BASE_URL = "http://47.97.195.152:8080/cloud/"
         var INSTANCE:WindService? = null
 
         fun getService(): WindService =
