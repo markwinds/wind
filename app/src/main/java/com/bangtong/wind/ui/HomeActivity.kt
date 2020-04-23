@@ -3,6 +3,7 @@ package com.bangtong.wind.ui
 import android.R.attr
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -26,6 +27,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_log.toolbar
 import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.order_view_item.*
 
 
 class HomeActivity : MyActivity(){
@@ -52,7 +54,6 @@ class HomeActivity : MyActivity(){
         actionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
         observeData()
         initListener()
-        //LogUtil.e("hello","${this::class.qualifiedName}")
         packageNull.visibility = View.GONE
         recyclerView.adapter = waitAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -141,6 +142,16 @@ class HomeActivity : MyActivity(){
         intent.putExtra("order",order)
         startActivity(intent)
     }
+
+//    private fun adaptation(){
+//        //LogUtil.e("hello","${this::class.qualifiedName}")
+//        val display = windowManager.defaultDisplay
+//        val size = Point()
+//        display.getSize(size)
+//        if(size.x>1100){
+//            mainView.wid
+//        }
+//    }
 
     private fun observeData(){
         viewModel.orderForms.observe(this, Observer {
