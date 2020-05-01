@@ -19,6 +19,7 @@ class AdsManagerViewHolder(val view: View):RecyclerView.ViewHolder(view) {
     private val fullAddress: TextView = view.findViewById(R.id.fullAddress)
     private val delete:Button = view.findViewById(R.id.delete)
     private val edit:Button = view.findViewById(R.id.edit)
+    private val holderContext = MyActivity.getTopActivityWithType("AdsManagerActivity") as AdsManagerActivity
 
     fun bind(ads:UserAddress?){
         if(ads!=null){
@@ -27,20 +28,20 @@ class AdsManagerViewHolder(val view: View):RecyclerView.ViewHolder(view) {
             temp = ads.province+" "+ads.city+" "+ads.area+" "+ads.location
             fullAddress.text = temp
             delete.setOnClickListener{
-                MaterialDialog((MyActivity.getTopActivity() as AdsManagerActivity)).show {
+                MaterialDialog(holderContext).show {
                     message(R.string.confirm_delete)
                     positiveButton(R.string.confirm){
-                        (MyActivity.getTopActivity() as AdsManagerActivity).viewModel.deleteCloud(ads)
+                        holderContext.viewModel.deleteCloud(ads)
                     }
                     negativeButton(android.R.string.cancel)
                     cornerRadius(10f) // 角半径
                 }
             }
             edit.setOnClickListener{
-                (MyActivity.getTopActivity() as AdsManagerActivity).goEditAddressActivity(ads)
+                holderContext.goEditAddressActivity(ads)
             }
             view.setOnClickListener{
-                (MyActivity.getTopActivity() as AdsManagerActivity).goAddOrderActivity(ads)
+                holderContext.goAddOrderActivity(ads)
             }
         }
     }
